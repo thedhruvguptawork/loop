@@ -1,0 +1,801 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+
+  --bg: #f5f8f3;
+  --white: #ffffff;
+  --black: #101411;
+
+  --green: #b7ff3c;
+  --green-dark: #6fae1d;
+
+  --purple: #9b7cff;
+
+  --muted: #667169;
+  --border: #dce5dd;
+
+  color: var(--black);
+  background: var(--bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--black);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =====================================================
+   LANDING PAGE
+===================================================== */
+
+.landing-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 73% 38%,
+      rgba(183, 255, 60, 0.17),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 92% 8%,
+      rgba(155, 124, 255, 0.09),
+      transparent 24%
+    ),
+    var(--bg);
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar {
+  width: min(1200px, calc(100% - 48px));
+  height: 72px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+  z-index: 20;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  color: var(--black);
+
+  font-size: 30px;
+  font-weight: 900;
+
+  letter-spacing: -2px;
+}
+
+.logo-mark {
+  width: 39px;
+  height: 39px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 12px;
+
+  background: var(--black);
+  color: var(--green);
+
+  font-size: 19px;
+
+  box-shadow:
+    0 9px 25px rgba(16, 20, 17, 0.14);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.login-btn,
+.signup-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 10px 16px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  transition: 0.2s ease;
+}
+
+.login-btn {
+  color: var(--black);
+}
+
+.login-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.signup-btn {
+  background: var(--black);
+  color: white;
+
+  box-shadow:
+    0 8px 22px rgba(16, 20, 17, 0.14);
+}
+
+.signup-btn span {
+  color: var(--green);
+}
+
+.signup-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 13px 28px rgba(16, 20, 17, 0.2);
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero {
+  width: min(1200px, calc(100% - 48px));
+
+  min-height: calc(100vh - 72px);
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: 0.88fr 1.12fr;
+
+  align-items: center;
+
+  gap: 35px;
+
+  /*
+    IMPORTANT:
+    Pull hero upward so there isn't a huge empty gap.
+  */
+  padding: 0 0 55px;
+}
+
+/* =====================================================
+   HERO CONTENT
+===================================================== */
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+
+  max-width: 610px;
+
+  /*
+    Slightly move content upward.
+  */
+  transform: translateY(-18px);
+}
+
+.hero-badge {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 8px 13px;
+
+  margin-bottom: 21px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.76);
+
+  color: #59635b;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #72c923;
+
+  box-shadow:
+    0 0 0 4px rgba(114, 201, 35, 0.12);
+}
+
+/* =====================================================
+   HERO HEADING
+===================================================== */
+
+.hero h1 {
+  font-size: clamp(58px, 6vw, 82px);
+
+  line-height: 0.91;
+
+  letter-spacing: -5px;
+
+  font-weight: 850;
+}
+
+.hero h1 em {
+  color: var(--green-dark);
+
+  font-style: normal;
+
+  position: relative;
+}
+
+.hero h1 em::after {
+  content: "";
+
+  position: absolute;
+
+  left: 2px;
+  right: 3px;
+  bottom: -4px;
+
+  height: 8px;
+
+  border-radius: 20px;
+
+  background: var(--green);
+
+  z-index: -1;
+
+  transform: rotate(-1deg);
+}
+
+/* =====================================================
+   DESCRIPTION
+===================================================== */
+
+.hero-content > p {
+  max-width: 500px;
+
+  margin-top: 25px;
+
+  color: var(--muted);
+
+  font-size: 15px;
+
+  line-height: 1.7;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.hero-buttons {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  margin-top: 28px;
+}
+
+.primary-btn,
+.secondary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+
+  padding: 13px 19px;
+
+  border-radius: 11px;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  transition: 0.25s ease;
+}
+
+.primary-btn {
+  background: var(--black);
+  color: white;
+
+  box-shadow:
+    0 12px 28px rgba(16, 20, 17, 0.17);
+}
+
+.primary-btn span {
+  color: var(--green);
+
+  font-size: 17px;
+
+  transition: 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 17px 34px rgba(16, 20, 17, 0.22);
+}
+
+.primary-btn:hover span {
+  transform: translate(3px, -2px);
+}
+
+.secondary-btn {
+  border: 1px solid var(--border);
+
+  background: rgba(255, 255, 255, 0.72);
+
+  color: var(--black);
+}
+
+.secondary-btn:hover {
+  background: white;
+
+  transform: translateY(-2px);
+}
+
+/* =====================================================
+   SOCIAL PROOF
+===================================================== */
+
+.social-proof {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  margin-top: 35px;
+}
+
+.avatars {
+  display: flex;
+}
+
+.avatars span {
+  width: 29px;
+  height: 29px;
+
+  display: grid;
+  place-items: center;
+
+  margin-left: -7px;
+
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+
+  background: var(--black);
+
+  color: var(--green);
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.avatars span:first-child {
+  margin-left: 0;
+}
+
+.proof-text strong,
+.proof-text small {
+  display: block;
+}
+
+.proof-text strong {
+  font-size: 11px;
+}
+
+.proof-text small {
+  margin-top: 2px;
+
+  color: var(--muted);
+
+  font-size: 10px;
+}
+
+/* =====================================================
+   HERO VISUAL
+===================================================== */
+
+.hero-visual {
+  min-height: 560px;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /*
+    Pull image slightly upward.
+  */
+  transform: translateY(-12px);
+}
+
+/* =====================================================
+   GLOW
+===================================================== */
+
+.visual-glow {
+  position: absolute;
+
+  width: 470px;
+  height: 470px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(183, 255, 60, 0.28),
+      rgba(183, 255, 60, 0.08) 48%,
+      transparent 72%
+    );
+
+  filter: blur(14px);
+
+  animation: glowPulse 5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+.image-wrapper {
+  position: relative;
+  z-index: 3;
+
+  /*
+    Smaller than before.
+  */
+  width: 530px;
+
+  border-radius: 30px;
+
+  overflow: hidden;
+
+  transform: rotate(1.5deg);
+
+  box-shadow:
+    0 32px 75px rgba(16, 30, 20, 0.17),
+    0 8px 22px rgba(16, 30, 20, 0.07);
+
+  animation: imageFloat 6s ease-in-out infinite;
+
+  transition: 0.4s ease;
+}
+
+.hero-image {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  transition: transform 0.6s ease;
+}
+
+.image-wrapper:hover {
+  transform: rotate(0deg) scale(1.015);
+}
+
+.image-wrapper:hover .hero-image {
+  transform: scale(1.025);
+}
+
+@keyframes imageFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(1.5deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(0.5deg);
+  }
+}
+
+/* =====================================================
+   FLOATING TAGS
+===================================================== */
+
+.floating-tag {
+  position: absolute;
+  z-index: 8;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  color: var(--black);
+
+  box-shadow:
+    0 16px 35px rgba(16, 30, 20, 0.12);
+
+  backdrop-filter: blur(15px);
+
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.floating-tag span {
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 7px;
+
+  background: var(--green);
+
+  font-size: 10px;
+}
+
+.tag-one {
+  top: 105px;
+  left: 22px;
+
+  animation: tagFloatOne 4s ease-in-out infinite;
+}
+
+.tag-two {
+  right: 15px;
+  top: 50px;
+
+  animation: tagFloatTwo 4.5s ease-in-out infinite;
+}
+
+.tag-three {
+  right: 28px;
+  bottom: 90px;
+
+  animation: tagFloatOne 5s ease-in-out infinite reverse;
+}
+
+@keyframes tagFloatOne {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes tagFloatTwo {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(8px) rotate(2deg);
+  }
+}
+
+/* =====================================================
+   SCROLL
+===================================================== */
+
+.scroll-hint {
+  position: absolute;
+
+  bottom: 19px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: #7b857e;
+
+  font-size: 10px;
+  font-weight: 650;
+
+  letter-spacing: 0.5px;
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1000px) {
+  .hero {
+    grid-template-columns: 1fr;
+
+    gap: 15px;
+
+    padding-top: 35px;
+  }
+
+  .hero-content {
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    text-align: center;
+
+    transform: none;
+  }
+
+  .hero-badge {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-content > p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons,
+  .social-proof {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    min-height: 510px;
+
+    transform: none;
+  }
+
+  .image-wrapper {
+    width: min(530px, 78vw);
+  }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+  .navbar {
+    width: calc(100% - 28px);
+
+    height: 70px;
+  }
+
+  .logo {
+    font-size: 23px;
+  }
+
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+
+    font-size: 15px;
+  }
+
+  .login-btn {
+    display: none;
+  }
+
+  .signup-btn {
+    padding: 9px 13px;
+  }
+
+  .hero {
+    width: calc(100% - 28px);
+
+    padding-top: 30px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+
+    letter-spacing: -3px;
+  }
+
+  .hero h1 em::after {
+    height: 6px;
+  }
+
+  .hero-content > p {
+    font-size: 14px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
+
+  .hero-visual {
+    min-height: 390px;
+  }
+
+  .image-wrapper {
+    width: 94%;
+
+    border-radius: 23px;
+  }
+
+  .floating-tag {
+    font-size: 9px;
+  }
+
+  .tag-one {
+    left: -3px;
+    top: 55px;
+  }
+
+  .tag-two {
+    right: -3px;
+    top: 25px;
+  }
+
+  .tag-three {
+    right: 0;
+    bottom: 50px;
+  }
+
+  .scroll-hint {
+    display: none;
+  }
+}
