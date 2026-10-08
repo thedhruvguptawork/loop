@@ -326,6 +326,27 @@
     0 15px 32px rgba(16, 30, 20, 0.09);
 }
 
+.profile-post-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-delete-btn {
+  border: none;
+  background: transparent;
+  color: #969c97;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.profile-delete-btn:hover {
+  color: #c53e3e;
+}
+
 .profile-post-author {
   display: flex;
   align-items: center;
@@ -380,7 +401,8 @@
 
 .profile-post-footer {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
 
   padding-top: 12px;
 
@@ -388,8 +410,43 @@
 
   color: #7d877f;
 
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
+}
+
+.profile-like-btn {
+  border: none;
+  background: transparent;
+  color: #7d877f;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.profile-like-btn:hover {
+  color: #e11d48;
+}
+
+.profile-like-btn.liked {
+  color: #e11d48;
+}
+
+.profile-feed-link {
+  color: #68726b;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.profile-feed-link:hover {
+  color: #101411;
 }
 
 

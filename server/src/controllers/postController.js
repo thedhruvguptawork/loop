@@ -17,6 +17,8 @@ const createPost = async (req, res) => {
             image: image || ""
         });
 
+        await post.populate("user", "username profilePicture");
+
         res.status(201).json({
             message: "Post created successfully",
             post
@@ -173,23 +175,34 @@ const toggleLike = async (req, res) => {
 
 const getFeed = async (req, res) => {
     try {
-        const currentUser = await User.findById(req.userId);
+        const { filter } = req.query;
 
-        if (!currentUser) {
-            return res.status(404).json({
-                message: "User not found"
-            });
+        // If explicitly requesting 'following', filter by followed users + self
+        if (filter === "following") {
+            const currentUser = await User.findById(req.userId);
+
+            if (!currentUser) {
+                return res.status(404).json({
+                    message: "User not found"
+                });
+            }
+
+            const userIds = [
+                currentUser._id,
+                ...currentUser.following
+            ];
+
+            const posts = await Post.find({
+                user: { $in: userIds }
+            })
+                .populate("user", "username profilePicture")
+                .sort({ createdAt: -1 });
+
+            return res.status(200).json(posts);
         }
 
-        // Include the current user + people they follow
-        const userIds = [
-            currentUser._id,
-            ...currentUser.following
-        ];
-
-        const posts = await Post.find({
-            user: { $in: userIds }
-        })
+        // Default: Show EVERYONE's posts so the entire community can interact
+        const posts = await Post.find()
             .populate("user", "username profilePicture")
             .sort({ createdAt: -1 });
 

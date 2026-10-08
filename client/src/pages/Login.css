@@ -701,3 +701,117 @@
   font-size: 11px;
   font-weight: 700;
 }
+
+.login-success {
+  margin: -2px 0 14px;
+
+  color: #5f9d16;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =====================================================
+   OTP FORM STYLES
+===================================================== */
+
+.otp-digit-input {
+  text-align: center;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  letter-spacing: 8px !important;
+  font-family: monospace;
+}
+
+.otp-interview-badge {
+  background: #f0fdf4;
+  border: 1px dashed #86efac;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.otp-badge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #166534;
+  margin-bottom: 4px;
+}
+
+.otp-autofill-btn {
+  background: #15803d;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.otp-autofill-btn:hover {
+  background: #166534;
+  transform: translateY(-1px);
+}
+
+.otp-badge-text {
+  font-size: 10px;
+  color: #15803d;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.otp-badge-text code {
+  background: #dcfce7;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-weight: 800;
+  color: #14532d;
+}
+
+.otp-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding: 0 4px;
+}
+
+.otp-resend-link {
+  background: none;
+  border: none;
+  color: #6fae1d;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0;
+  transition: 0.2s ease;
+}
+
+.otp-resend-link:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.otp-resend-link:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.otp-back-link {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: 0.2s ease;
+}
+
+.otp-back-link:hover {
+  color: #111827;
+}

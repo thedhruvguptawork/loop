@@ -103,7 +103,8 @@ const toggleFollow = async (req, res) => {
 
       return res.status(200).json({
         message: "User unfollowed",
-        following: false
+        following: false,
+        followersCount: targetUser.followers.length
       });
     }
 
@@ -121,7 +122,8 @@ const toggleFollow = async (req, res) => {
 
     res.status(200).json({
       message: "User followed",
-      following: true
+      following: true,
+      followersCount: targetUser.followers.length
     });
 
   } catch (error) {

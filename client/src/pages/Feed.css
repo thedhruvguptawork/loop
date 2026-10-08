@@ -381,6 +381,75 @@
 
 
 /* =========================================
+   FEED FILTER TABS
+========================================= */
+
+.feed-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(17, 21, 18, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 18px rgba(25, 40, 20, 0.04);
+}
+
+.feed-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feed-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #606760;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.feed-filter-btn span {
+  font-size: 12px;
+  color: #6b9900;
+}
+
+.feed-filter-btn:hover {
+  color: #111512;
+  background: rgba(17, 21, 18, 0.04);
+}
+
+.feed-filter-btn.active {
+  background: #111512;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(17, 21, 18, 0.15);
+}
+
+.feed-filter-btn.active span {
+  color: #b8ff35;
+}
+
+.feed-count-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7b847d;
+  padding: 4px 12px;
+  background: rgba(17, 21, 18, 0.05);
+  border-radius: 20px;
+}
+
+
+/* =========================================
    ERROR
 ========================================= */
 
@@ -582,6 +651,37 @@
 
 .delete-post-btn:hover {
   color: #c53e3e;
+}
+
+.feed-post-follow-btn {
+  border: 1px solid rgba(17, 21, 18, 0.14);
+  background: rgba(17, 21, 18, 0.04);
+  color: #111512;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.feed-post-follow-btn:hover {
+  background: #111512;
+  color: #ffffff;
+  border-color: #111512;
+}
+
+.feed-post-follow-btn.following {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #86efac;
+}
+
+.feed-post-follow-btn.following:hover {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fca5a5;
 }
 
 

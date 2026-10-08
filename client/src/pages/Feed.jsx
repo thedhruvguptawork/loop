@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Feed.css";
-
-const API_URL = "http://localhost:5000/api";
+import { API_URL } from "../services/api";
 
 function Feed() {
   const navigate = useNavigate();
 
   const [posts, setPosts] = useState([]);
   const [content, setContent] = useState("");
+  const [feedFilter, setFeedFilter] = useState("all"); // "all" | "following"
+  const [followingIds, setFollowingIds] = useState(new Set());
 
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
@@ -36,7 +37,7 @@ function Feed() {
   // ================================
   // FETCH FEED
   // ================================
-  const fetchFeed = async () => {
+  const fetchFeed = async (activeFilter = feedFilter) => {
     try {
       setLoading(true);
       setError("");
@@ -47,7 +48,7 @@ function Feed() {
       }
 
       const response = await axios.get(
-        `${API_URL}/posts/feed`,
+        `${API_URL}/posts/feed?filter=${activeFilter}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -75,9 +76,48 @@ function Feed() {
     }
   };
 
+  // Fetch logged in user's following list
+  const fetchFollowing = async () => {
+    try {
+      if (!token) return;
+      const res = await axios.get(`${API_URL}/users/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const ids = new Set(
+        (res.data.following || []).map((f) => (f?._id || f).toString())
+      );
+      setFollowingIds(ids);
+    } catch (e) {
+      console.error("Fetch profile error:", e);
+    }
+  };
+
   useEffect(() => {
-    fetchFeed();
-  }, []);
+    fetchFeed(feedFilter);
+    fetchFollowing();
+  }, [feedFilter]);
+
+  // Toggle follow/unfollow for another user
+  const handleToggleFollow = async (targetUserId) => {
+    try {
+      const res = await axios.put(
+        `${API_URL}/users/${targetUserId}/follow`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setFollowingIds((prev) => {
+        const next = new Set(prev);
+        if (res.data.following) {
+          next.add(targetUserId.toString());
+        } else {
+          next.delete(targetUserId.toString());
+        }
+        return next;
+      });
+    } catch (err) {
+      console.error("Toggle follow error:", err);
+    }
+  };
 
   // ================================
   // CREATE POST
@@ -567,15 +607,15 @@ function Feed() {
 
           <div>
             <span className="feed-eyebrow">
-              YOUR SPACE
+              COMMUNITY FEED
             </span>
 
             <h1>
-              Your feed.
+              Global feed.
             </h1>
 
             <p>
-              See what your people are up to.
+              See what everyone is talking about and join the conversation.
             </p>
           </div>
 
@@ -610,7 +650,7 @@ function Feed() {
               </strong>
 
               <span>
-                Share something with your people
+                Share something with everyone
               </span>
             </div>
 
@@ -626,7 +666,7 @@ function Feed() {
                   e.target.value
                 )
               }
-              placeholder="What's on your mind?"
+              placeholder="What's on your mind? Share with the community..."
               rows="4"
             />
 
@@ -657,6 +697,32 @@ function Feed() {
         </section>
 
 
+        {/* FEED FILTER TABS */}
+        <div className="feed-filter-bar">
+          <div className="feed-filter-tabs">
+            <button
+              type="button"
+              className={`feed-filter-btn ${feedFilter === "all" ? "active" : ""}`}
+              onClick={() => setFeedFilter("all")}
+            >
+              <span>✦</span> Everyone
+            </button>
+
+            <button
+              type="button"
+              className={`feed-filter-btn ${feedFilter === "following" ? "active" : ""}`}
+              onClick={() => setFeedFilter("following")}
+            >
+              Following
+            </button>
+          </div>
+
+          <span className="feed-count-badge">
+            {posts.length} {posts.length === 1 ? "post" : "posts"}
+          </span>
+        </div>
+
+
         {/* ERROR */}
         {error && (
           <div className="feed-error">
@@ -671,7 +737,7 @@ function Feed() {
             <div className="loading-dot"></div>
 
             <p>
-              Loading your feed...
+              Loading feed...
             </p>
           </div>
         ) : posts.length === 0 ? (
@@ -683,12 +749,15 @@ function Feed() {
             </div>
 
             <h2>
-              Your feed is quiet.
+              {feedFilter === "following"
+                ? "No posts from people you follow yet."
+                : "No posts in the community yet."}
             </h2>
 
             <p>
-              Follow some people or create
-              your first post.
+              {feedFilter === "following"
+                ? "Switch to 'Everyone' to see community posts, or follow more people!"
+                : "Be the first person to share something with everyone!"}
             </p>
 
           </div>
@@ -748,6 +817,22 @@ function Feed() {
 
                     </Link>
 
+                    {/* FOLLOW / UNFOLLOW BUTTON FOR OTHER USERS */}
+                    {!isOwner && postUser?._id && (
+                      <button
+                        type="button"
+                        className={`feed-post-follow-btn ${
+                          followingIds.has(postUser._id.toString())
+                            ? "following"
+                            : ""
+                        }`}
+                        onClick={() => handleToggleFollow(postUser._id)}
+                      >
+                        {followingIds.has(postUser._id.toString())
+                          ? "Following"
+                          : "+ Follow"}
+                      </button>
+                    )}
 
                     {/* DELETE POST */}
                     {isOwner && (
