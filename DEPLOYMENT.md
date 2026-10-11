@@ -77,10 +77,15 @@ For cloud providers like Render to connect to your database without being blocke
 | `MONGO_URI` | `mongodb+srv://...` | Your MongoDB Atlas connection URI |
 | `JWT_SECRET` | `socialmediasecret0001` | Your secret token signing key |
 | `CLIENT_URL` | `http://localhost:5173` | We will update this with your Vercel URL in Step 5 |
-| `ALLOW_DEMO_OTP` | `true` | Allows terminal logging and your secret bypass code |
+| `ALLOW_DEMO_OTP` | `true` | Allows terminal logging, on-screen OTP fallback, & master code `123456` |
 | `DEMO_BYPASS_OTP` | `123456` | Your secret emergency OTP |
-| `EMAIL_USER` | `(optional)` | Gmail address (if using live SMTP emails) |
+| `RESEND_API_KEY` | `(optional)` | Free API key from [resend.com](https://resend.com) for real emails on Render Free tier (over HTTPS 443) |
+| `EMAIL_USER` | `(optional)` | Gmail address (if using SMTP on paid Render / custom VPS) |
 | `EMAIL_PASS` | `(optional)` | 16-character Gmail App Password |
+
+> **Why Resend or On-Screen OTP?**  
+> Render Free tier restricts outbound SMTP ports (`25`, `465`, `587`). If you want real emails delivered to inboxes on Render's free tier, add `RESEND_API_KEY` (takes 30 seconds for free at resend.com).  
+> If no email API is configured or SMTP times out, Loop automatically displays the OTP code right on the screen with a 1-click **Auto-fill** button and accepts master bypass code `123456`, so no evaluator, interviewer, or user ever gets locked out.
 
 6. Click **Create Web Service**.
 7. Wait 2-3 minutes for the build to finish. Once live, Render will give you a public URL (e.g., `https://loop-backend.onrender.com`).

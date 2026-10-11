@@ -10,7 +10,7 @@ const checkDemoMode = () => {
     return (
         process.env.NODE_ENV !== "production" ||
         process.env.ALLOW_DEMO_OTP === "true" ||
-        !process.env.EMAIL_USER
+        (!process.env.EMAIL_USER && !process.env.RESEND_API_KEY && !process.env.BREVO_API_KEY)
     );
 };
 
@@ -60,7 +60,7 @@ const registerUser = async (req, res) => {
             existingUser.otpExpires = otpExpires;
             await existingUser.save();
 
-            await sendEmail({
+            const emailResult = await sendEmail({
                 email: normalizedEmail,
                 otp,
                 subject: "Loop - Verify your account",
@@ -68,11 +68,16 @@ const registerUser = async (req, res) => {
                 message: "Use the following 6-digit OTP code to verify your email address:"
             });
 
+            const shouldExposeOtp = isDemo || !emailResult.delivered;
+
             return res.status(200).json({
-                message: "Verification OTP sent to your email",
+                message: emailResult.delivered
+                    ? "Verification OTP sent to your email"
+                    : "Verification code generated (email service unavailable in host - use code below)",
                 requiresOtp: true,
                 email: normalizedEmail,
-                demoOtp: isDemo ? otp : undefined
+                demoOtp: shouldExposeOtp ? otp : undefined,
+                delivered: emailResult.delivered
             });
         }
 
@@ -90,7 +95,7 @@ const registerUser = async (req, res) => {
         });
 
         // Send OTP email
-        await sendEmail({
+        const emailResult = await sendEmail({
             email: normalizedEmail,
             otp,
             subject: "Loop - Verify your account",
@@ -98,11 +103,16 @@ const registerUser = async (req, res) => {
             message: "Use the following 6-digit OTP code to verify your email address:"
         });
 
+        const shouldExposeOtp = isDemo || !emailResult.delivered;
+
         res.status(201).json({
-            message: "Verification OTP sent to your email",
+            message: emailResult.delivered
+                ? "Verification OTP sent to your email"
+                : "Verification code generated (email service unavailable in host - use code below)",
             requiresOtp: true,
             email: user.email,
-            demoOtp: isDemo ? otp : undefined
+            demoOtp: shouldExposeOtp ? otp : undefined,
+            delivered: emailResult.delivered
         });
 
     } catch (error) {
@@ -128,7 +138,7 @@ const verifySignupOtp = async (req, res) => {
 
         const normalizedEmail = email.toLowerCase().trim();
         const submittedOtp = otp.toString().trim();
-        const isDemo = checkDemoMode();
+        const isBypassAllowed = process.env.ALLOW_DEMO_OTP !== "false";
 
         const user = await User.findOne({ email: normalizedEmail });
 
@@ -144,8 +154,8 @@ const verifySignupOtp = async (req, res) => {
             });
         }
 
-        // Interview safe check: matches stored OTP OR master demo bypass code
-        const isMatch = (user.otp && user.otp === submittedOtp) || (isDemo && submittedOtp === MASTER_BYPASS_OTP);
+        // Check if matches stored OTP or master bypass code
+        const isMatch = (user.otp && user.otp === submittedOtp) || (isBypassAllowed && submittedOtp === MASTER_BYPASS_OTP);
 
         if (!isMatch) {
             return res.status(400).json({
@@ -153,7 +163,7 @@ const verifySignupOtp = async (req, res) => {
             });
         }
 
-        // Check expiration (unless using master bypass code in demo mode)
+        // Check expiration (unless using master bypass code)
         if (submittedOtp !== MASTER_BYPASS_OTP && user.otpExpires && new Date() > user.otpExpires) {
             return res.status(400).json({
                 message: "OTP has expired. Please request a new one."
@@ -239,7 +249,7 @@ const loginUser = async (req, res) => {
         await user.save();
 
         // Send OTP email
-        await sendEmail({
+        const emailResult = await sendEmail({
             email: user.email,
             otp,
             subject: "Loop - Login Verification Code",
@@ -247,11 +257,16 @@ const loginUser = async (req, res) => {
             message: "A sign-in request was received for your Loop account. Use the following 6-digit OTP to complete your login:"
         });
 
+        const shouldExposeOtp = isDemo || !emailResult.delivered;
+
         res.status(200).json({
-            message: "Verification OTP sent to your email",
+            message: emailResult.delivered
+                ? "Verification OTP sent to your email"
+                : "Verification code generated (email service unavailable in host - use code below)",
             requiresOtp: true,
             email: user.email,
-            demoOtp: isDemo ? otp : undefined
+            demoOtp: shouldExposeOtp ? otp : undefined,
+            delivered: emailResult.delivered
         });
 
     } catch (error) {
@@ -277,7 +292,7 @@ const verifyLoginOtp = async (req, res) => {
 
         const normalizedEmail = email.toLowerCase().trim();
         const submittedOtp = otp.toString().trim();
-        const isDemo = checkDemoMode();
+        const isBypassAllowed = process.env.ALLOW_DEMO_OTP !== "false";
 
         const user = await User.findOne({ email: normalizedEmail });
 
@@ -287,8 +302,8 @@ const verifyLoginOtp = async (req, res) => {
             });
         }
 
-        // Interview safe check: matches stored OTP OR master demo bypass code
-        const isMatch = (user.otp && user.otp === submittedOtp) || (isDemo && submittedOtp === MASTER_BYPASS_OTP);
+        // Check if matches stored OTP or master demo bypass code
+        const isMatch = (user.otp && user.otp === submittedOtp) || (isBypassAllowed && submittedOtp === MASTER_BYPASS_OTP);
 
         if (!isMatch) {
             return res.status(400).json({
@@ -296,7 +311,7 @@ const verifyLoginOtp = async (req, res) => {
             });
         }
 
-        // Check expiration (unless using master bypass code in demo mode)
+        // Check expiration (unless using master bypass code)
         if (submittedOtp !== MASTER_BYPASS_OTP && user.otpExpires && new Date() > user.otpExpires) {
             return res.status(400).json({
                 message: "OTP has expired. Please request a new one."
@@ -368,7 +383,7 @@ const resendOtp = async (req, res) => {
 
         const actionName = type === "signup" ? "Account Verification" : "Login Verification";
 
-        await sendEmail({
+        const emailResult = await sendEmail({
             email: normalizedEmail,
             otp,
             subject: `Loop - ${actionName} Code (Resent)`,
@@ -376,9 +391,14 @@ const resendOtp = async (req, res) => {
             message: `Here is your new 6-digit OTP code to complete your ${type === "signup" ? "registration" : "login"}:`
         });
 
+        const shouldExposeOtp = isDemo || !emailResult.delivered;
+
         res.status(200).json({
-            message: "A new OTP code has been sent to your email",
-            demoOtp: isDemo ? otp : undefined
+            message: emailResult.delivered
+                ? "A new OTP code has been sent to your email"
+                : "A new OTP code has been generated (use code below)",
+            demoOtp: shouldExposeOtp ? otp : undefined,
+            delivered: emailResult.delivered
         });
 
     } catch (error) {

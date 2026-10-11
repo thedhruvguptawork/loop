@@ -773,4 +773,25 @@
 
 .otp-back-link:hover {
   color: #111827;
+}
+
+.otp-bypass-hint {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.otp-bypass-hint code {
+  background: #e5e7eb;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  color: #1f2937;
+  font-family: monospace;
+  transition: 0.15s ease;
+}
+
+.otp-bypass-hint code:hover {
+  background: #d1d5db;
 }
