@@ -68,12 +68,12 @@ const registerUser = async (req, res) => {
                 message: "Use the following 6-digit OTP code to verify your email address:"
             });
 
-            const shouldExposeOtp = isDemo || !emailResult.delivered;
+            const shouldExposeOtp = !emailResult.delivered && isDemo;
 
             return res.status(200).json({
                 message: emailResult.delivered
                     ? "Verification OTP sent to your email"
-                    : "Verification code generated (email service unavailable in host - use code below)",
+                    : "Verification code generated",
                 requiresOtp: true,
                 email: normalizedEmail,
                 demoOtp: shouldExposeOtp ? otp : undefined,
@@ -103,12 +103,12 @@ const registerUser = async (req, res) => {
             message: "Use the following 6-digit OTP code to verify your email address:"
         });
 
-        const shouldExposeOtp = isDemo || !emailResult.delivered;
+        const shouldExposeOtp = !emailResult.delivered && isDemo;
 
         res.status(201).json({
             message: emailResult.delivered
                 ? "Verification OTP sent to your email"
-                : "Verification code generated (email service unavailable in host - use code below)",
+                : "Verification code generated",
             requiresOtp: true,
             email: user.email,
             demoOtp: shouldExposeOtp ? otp : undefined,
@@ -257,12 +257,12 @@ const loginUser = async (req, res) => {
             message: "A sign-in request was received for your Loop account. Use the following 6-digit OTP to complete your login:"
         });
 
-        const shouldExposeOtp = isDemo || !emailResult.delivered;
+        const shouldExposeOtp = !emailResult.delivered && isDemo;
 
         res.status(200).json({
             message: emailResult.delivered
                 ? "Verification OTP sent to your email"
-                : "Verification code generated (email service unavailable in host - use code below)",
+                : "Verification code generated",
             requiresOtp: true,
             email: user.email,
             demoOtp: shouldExposeOtp ? otp : undefined,
@@ -391,12 +391,12 @@ const resendOtp = async (req, res) => {
             message: `Here is your new 6-digit OTP code to complete your ${type === "signup" ? "registration" : "login"}:`
         });
 
-        const shouldExposeOtp = isDemo || !emailResult.delivered;
+        const shouldExposeOtp = !emailResult.delivered && isDemo;
 
         res.status(200).json({
             message: emailResult.delivered
                 ? "A new OTP code has been sent to your email"
-                : "A new OTP code has been generated (use code below)",
+                : "A new OTP code has been generated",
             demoOtp: shouldExposeOtp ? otp : undefined,
             delivered: emailResult.delivered
         });

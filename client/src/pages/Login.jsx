@@ -16,7 +16,6 @@ function Login() {
 
   const [otp, setOtp] = useState("");
   const [pendingEmail, setPendingEmail] = useState("");
-  const [demoOtp, setDemoOtp] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
 
   const [message, setMessage] = useState("");
@@ -56,11 +55,6 @@ function Login() {
       if (response.data.requiresOtp) {
         setPendingEmail(formData.email.toLowerCase().trim());
         setMessage(response.data.message || "Verification code sent to your email.");
-        if (response.data.demoOtp) {
-          setDemoOtp(response.data.demoOtp);
-        } else {
-          setDemoOtp("");
-        }
         setStep("otp");
         setResendCooldown(30);
       } else {
@@ -133,9 +127,6 @@ function Login() {
       });
 
       setMessage(response.data.message || "A new code has been sent.");
-      if (response.data.demoOtp) {
-        setDemoOtp(response.data.demoOtp);
-      }
       setResendCooldown(30);
 
     } catch (err) {
@@ -279,24 +270,6 @@ function Login() {
               </div>
 
               <form className="login-form" onSubmit={handleVerifyOtp}>
-                {demoOtp && (
-                  <div className="otp-interview-badge">
-                    <div className="otp-badge-header">
-                      <span>✦ VERIFICATION CODE</span>
-                      <button
-                        type="button"
-                        className="otp-autofill-btn"
-                        onClick={() => setOtp(demoOtp)}
-                      >
-                        Auto-fill
-                      </button>
-                    </div>
-                    <p className="otp-badge-text">
-                      Code: <code>{demoOtp}</code> &bull; Master bypass: <code>123456</code>
-                    </p>
-                  </div>
-                )}
-
                 {/* OTP INPUT */}
                 <div className="login-input-group">
                   <label htmlFor="login-otp">6-Digit Verification Code</label>
@@ -351,17 +324,6 @@ function Login() {
                     ← Back to login
                   </button>
                 </div>
-
-                <p className="otp-bypass-hint">
-                  Master demo bypass code:{" "}
-                  <code
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setOtp("123456")}
-                    title="Click to auto-fill 123456"
-                  >
-                    123456
-                  </code>
-                </p>
               </form>
             </>
           )}
